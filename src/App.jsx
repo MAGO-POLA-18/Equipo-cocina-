@@ -32,13 +32,32 @@ function App() {
 const [detallesCompra, setDetallesCompra] = useState({});
   const [nuevoProducto, setNuevoProducto] = useState("");
 
-  const cambiarSeleccion = (producto) => {
+const cambiarSeleccion = (producto) => {
+  const estaSeleccionado = seleccionados.includes(producto);
+
+  if (estaSeleccionado) {
     setSeleccionados((actuales) =>
-      actuales.includes(producto)
-        ? actuales.filter((item) => item !== producto)
-        : [...actuales, producto]
+      actuales.filter((item) => item !== producto)
     );
-  };
+
+    setDetallesCompra((actuales) => {
+      const copia = { ...actuales };
+      delete copia[producto];
+      return copia;
+    });
+  } else {
+    setSeleccionados((actuales) => [...actuales, producto]);
+
+    setDetallesCompra((actuales) => ({
+      ...actuales,
+      [producto]: {
+        cantidad: "",
+        unidad: "unidades",
+        nota: "",
+      },
+    }));
+  }
+};
 
   const agregarProducto = (event) => {
     event.preventDefault();
