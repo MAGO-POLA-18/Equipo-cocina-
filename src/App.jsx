@@ -79,7 +79,90 @@ const cambiarSeleccion = (producto) => {
     setProductosFrio((actuales) => [...actuales, nombre]);
     setNuevoProducto("");
   };
+if (pantalla === "pedido") {
+  return (
+    <div className="app">
+      <header className="header">
+        <div>
+          <p className="eyebrow">COMPRAS</p>
+          <h1>Pedido actual</h1>
+        </div>
 
+        <p className="subtitle">
+          Marca los productos a medida que los vayas comprando.
+        </p>
+      </header>
+
+      <div className="page-navigation">
+        <button
+          className="back-button"
+          onClick={() => setPantalla("frio")}
+        >
+          <ArrowLeft size={18} />
+          Volver
+        </button>
+      </div>
+
+      <main className="shopping-page">
+        <section className="order-section">
+          <div className="order-section-title">
+            <Snowflake size={18} />
+            <h2>Frío</h2>
+          </div>
+
+          {seleccionados.length === 0 ? (
+            <p className="empty-order">
+              Todavía no hay productos en el pedido.
+            </p>
+          ) : (
+            <div className="order-list">
+              {seleccionados.map((producto) => {
+                const comprado = comprados.includes(producto);
+                const detalle = detallesCompra[producto] || {};
+
+                return (
+                  <button
+                    key={producto}
+                    className={`order-item ${comprado ? "purchased" : ""}`}
+                    onClick={() =>
+                      setComprados((actuales) =>
+                        comprado
+                          ? actuales.filter((item) => item !== producto)
+                          : [...actuales, producto]
+                      )
+                    }
+                  >
+                    <span className="purchase-check">
+                      {comprado && <Check size={18} />}
+                    </span>
+
+                    <span className="order-product-info">
+                      <span className="order-product-main">
+                        <strong>{producto}</strong>
+
+                        {(detalle.cantidad || detalle.unidad) && (
+                          <span className="order-quantity">
+                            {detalle.cantidad || "—"} {detalle.unidad}
+                          </span>
+                        )}
+                      </span>
+
+                      {detalle.nota && (
+                        <span className="order-note">
+                          {detalle.nota}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+}
   if (pantalla === "frio") {
     return (
       <div className="app">
