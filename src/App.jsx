@@ -28,7 +28,8 @@ const productosFrioIniciales = [
 function App() {
   const [pantalla, setPantalla] = useState("home");
   const [productosFrio, setProductosFrio] = useState(productosFrioIniciales);
-  const [seleccionados, setSeleccionados] = useState([]);
+ const [seleccionados, setSeleccionados] = useState([]);
+const [detallesCompra, setDetallesCompra] = useState({});
   const [nuevoProducto, setNuevoProducto] = useState("");
 
   const cambiarSeleccion = (producto) => {
