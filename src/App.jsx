@@ -181,6 +181,24 @@ const cambiarSeleccion = (producto) => {
           <option value="paquetes">Paquetes</option>
         </select>
       </div>
+      <div className="note-field">
+  <label>Nota opcional</label>
+
+  <input
+    type="text"
+    placeholder="Ej. grandes, maduros, marca concreta..."
+    value={detallesCompra[producto]?.nota || ""}
+    onChange={(event) =>
+      setDetallesCompra((actuales) => ({
+        ...actuales,
+        [producto]: {
+          ...actuales[producto],
+          nota: event.target.value,
+        },
+      }))
+    }
+  />
+</div>
     </div>
   )}
 </div>
