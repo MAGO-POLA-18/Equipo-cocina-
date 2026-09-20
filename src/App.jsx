@@ -1,11 +1,84 @@
+import { useState } from "react";
 import {
   ClipboardList,
   ShoppingCart,
   Users,
   AlertCircle,
+  ArrowLeft,
+  Snowflake,
+  Flame,
+  CakeSlice,
+  Wine,
+  SprayCan,
+  Plus,
 } from "lucide-react";
 
 function App() {
+  const [pantalla, setPantalla] = useState("home");
+
+  if (pantalla === "compras") {
+    return (
+      <div className="app">
+        <header className="header">
+          <button
+            className="back-button"
+            onClick={() => setPantalla("home")}
+          >
+            <ArrowLeft size={20} />
+            Volver
+          </button>
+
+          <div>
+            <p className="eyebrow">COMPRAS</p>
+            <h1>¿Qué sector necesita comprar?</h1>
+          </div>
+
+          <p className="subtitle">
+            Selecciona un sector para cargar productos.
+          </p>
+        </header>
+
+        <main className="dashboard">
+          <section className="card">
+            <Snowflake size={24} />
+            <h2>Frío</h2>
+            <p>Productos y materias primas del sector frío.</p>
+          </section>
+
+          <section className="card">
+            <Flame size={24} />
+            <h2>Caliente</h2>
+            <p>Productos y materias primas de cocina caliente.</p>
+          </section>
+
+          <section className="card">
+            <CakeSlice size={24} />
+            <h2>Pastelería</h2>
+            <p>Ingredientes y productos de pastelería.</p>
+          </section>
+
+          <section className="card">
+            <Wine size={24} />
+            <h2>Barra</h2>
+            <p>Bebidas y productos de barra.</p>
+          </section>
+
+          <section className="card">
+            <SprayCan size={24} />
+            <h2>Limpieza</h2>
+            <p>Productos de limpieza e higiene.</p>
+          </section>
+
+          <section className="card add-card">
+            <Plus size={24} />
+            <h2>Crear sector</h2>
+            <p>Añade un nuevo sector cuando sea necesario.</p>
+          </section>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -17,7 +90,12 @@ function App() {
       </header>
 
       <main className="dashboard">
-        <section className="card">
+        <section
+          className="card"
+          onClick={() => setPantalla("compras")}
+          role="button"
+          tabIndex="0"
+        >
           <ShoppingCart size={24} />
           <h2>Compras</h2>
           <p>Pedidos, proveedores y productos pendientes.</p>
