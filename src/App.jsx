@@ -11,10 +11,129 @@ import {
   Wine,
   SprayCan,
   Plus,
+  Check,
 } from "lucide-react";
+
+const productosFrioIniciales = [
+  "Salmón",
+  "Aguacate",
+  "Limón",
+  "Nata",
+  "Mantequilla",
+  "Huevos",
+  "Queso",
+  "Leche",
+];
 
 function App() {
   const [pantalla, setPantalla] = useState("home");
+  const [productosFrio, setProductosFrio] = useState(productosFrioIniciales);
+  const [seleccionados, setSeleccionados] = useState([]);
+  const [nuevoProducto, setNuevoProducto] = useState("");
+
+  const cambiarSeleccion = (producto) => {
+    setSeleccionados((actuales) =>
+      actuales.includes(producto)
+        ? actuales.filter((item) => item !== producto)
+        : [...actuales, producto]
+    );
+  };
+
+  const agregarProducto = (event) => {
+    event.preventDefault();
+
+    const nombre = nuevoProducto.trim();
+
+    if (!nombre) return;
+
+    const yaExiste = productosFrio.some(
+      (producto) => producto.toLowerCase() === nombre.toLowerCase()
+    );
+
+    if (yaExiste) {
+      setNuevoProducto("");
+      return;
+    }
+
+    setProductosFrio((actuales) => [...actuales, nombre]);
+    setNuevoProducto("");
+  };
+
+  if (pantalla === "frio") {
+    return (
+      <div className="app">
+        <header className="header">
+          <div>
+            <p className="eyebrow">COMPRAS · FRÍO</p>
+            <h1>Lista de Frío</h1>
+          </div>
+
+          <p className="subtitle">
+            Toca los productos que hacen falta comprar.
+          </p>
+        </header>
+
+        <div className="page-navigation">
+          <button
+            className="back-button"
+            onClick={() => setPantalla("compras")}
+          >
+            <ArrowLeft size={18} />
+            Sectores
+          </button>
+        </div>
+
+        <main className="shopping-page">
+          <div className="shopping-summary">
+            <div>
+              <span className="summary-label">PEDIDO ACTUAL</span>
+              <strong>
+                {seleccionados.length}{" "}
+                {seleccionados.length === 1 ? "producto" : "productos"}
+              </strong>
+            </div>
+
+            <ShoppingCart size={24} />
+          </div>
+
+          <section className="product-list">
+            {productosFrio.map((producto) => {
+              const activo = seleccionados.includes(producto);
+
+              return (
+                <button
+                  key={producto}
+                  className={`product-item ${activo ? "selected" : ""}`}
+                  onClick={() => cambiarSeleccion(producto)}
+                >
+                  <span className="product-check">
+                    {activo && <Check size={18} />}
+                  </span>
+
+                  <span>{producto}</span>
+                </button>
+              );
+            })}
+          </section>
+
+          <form className="add-product-form" onSubmit={agregarProducto}>
+            <input
+              type="text"
+              value={nuevoProducto}
+              onChange={(event) => setNuevoProducto(event.target.value)}
+              placeholder="Nuevo producto..."
+              aria-label="Nombre del nuevo producto"
+            />
+
+            <button type="submit" className="add-product-button">
+              <Plus size={18} />
+              Añadir
+            </button>
+          </form>
+        </main>
+      </div>
+    );
+  }
 
   if (pantalla === "compras") {
     return (
@@ -41,7 +160,17 @@ function App() {
         </div>
 
         <main className="dashboard">
-          <section className="card">
+          <section
+            className="card"
+            role="button"
+            tabIndex={0}
+            onClick={() => setPantalla("frio")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                setPantalla("frio");
+              }
+            }}
+          >
             <Snowflake size={24} />
             <h2>Frío</h2>
             <p>Productos y materias primas del sector frío.</p>
