@@ -188,8 +188,11 @@ if (pantalla === "pedido") {
         </div>
 
         <main className="shopping-page">
-          <div className="shopping-summary">
-            <div>
+        <button
+  className="shopping-summary"
+  onClick={() => setPantalla("pedido")}
+>
+         </button>
               <span className="summary-label">PEDIDO ACTUAL</span>
               <strong>
                 {seleccionados.length}{" "}
