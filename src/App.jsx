@@ -1,120 +1,136 @@
-* {
-  box-sizing: border-box;
-}
+import { useState } from "react";
+import {
+  ClipboardList,
+  ShoppingCart,
+  Users,
+  AlertCircle,
+  ArrowLeft,
+  Snowflake,
+  Flame,
+  CakeSlice,
+  Wine,
+  SprayCan,
+  Plus,
+} from "lucide-react";
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f4f5f7;
-  color: #1f2937;
-}
+function App() {
+  const [pantalla, setPantalla] = useState("home");
 
-.app {
-  min-height: 100vh;
-}
+  if (pantalla === "compras") {
+    return (
+      <div className="app">
+        <header className="header">
+          <div>
+            <p className="eyebrow">COMPRAS</p>
+            <h1>¿Qué sector necesita comprar?</h1>
+          </div>
 
-.header {
-  background: #111827;
-  color: white;
-  padding: 32px 24px;
-}
+          <p className="subtitle">
+            Selecciona un sector para cargar productos.
+          </p>
+        </header>
 
-.header h1 {
-  margin: 4px 0 0;
-  font-size: 32px;
-}
+        <div className="page-navigation">
+          <button
+            className="back-button"
+            onClick={() => setPantalla("home")}
+          >
+            <ArrowLeft size={18} />
+            Volver
+          </button>
+        </div>
 
-.eyebrow {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  opacity: 0.7;
-}
+        <main className="dashboard">
+          <section className="card">
+            <Snowflake size={24} />
+            <h2>Frío</h2>
+            <p>Productos y materias primas del sector frío.</p>
+          </section>
 
-.subtitle {
-  margin: 8px 0 0;
-  color: #d1d5db;
-}
+          <section className="card">
+            <Flame size={24} />
+            <h2>Caliente</h2>
+            <p>Productos y materias primas de cocina caliente.</p>
+          </section>
 
-.dashboard {
-  width: min(100% - 32px, 900px);
-  margin: 32px auto;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
+          <section className="card">
+            <CakeSlice size={24} />
+            <h2>Pastelería</h2>
+            <p>Ingredientes y productos de pastelería.</p>
+          </section>
 
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
-}
+          <section className="card">
+            <Wine size={24} />
+            <h2>Barra</h2>
+            <p>Bebidas y productos de barra.</p>
+          </section>
 
-.card h2 {
-  margin: 14px 0 6px;
-}
+          <section className="card">
+            <SprayCan size={24} />
+            <h2>Limpieza</h2>
+            <p>Productos de limpieza e higiene.</p>
+          </section>
 
-.card p {
-  margin: 0;
-  color: #6b7280;
-  line-height: 1.5;
-}
-
-/* Tarjetas interactivas */
-
-.card[role="button"] {
-  cursor: pointer;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.card[role="button"]:hover {
-  transform: translateY(-2px);
-  border-color: #cbd5e1;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-/* Navegación interior */
-
-.page-navigation {
-  width: min(100% - 32px, 900px);
-  margin: 20px auto -12px;
-}
-
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 9px 12px;
-  border: 0;
-  background: transparent;
-  color: #4b5563;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.back-button:hover {
-  background: #e5e7eb;
-  color: #111827;
-}
-
-@media (max-width: 600px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-    margin-top: 20px;
+          <section className="card add-card">
+            <Plus size={24} />
+            <h2>Crear sector</h2>
+            <p>Añade un nuevo sector cuando sea necesario.</p>
+          </section>
+        </main>
+      </div>
+    );
   }
 
-  .header {
-    padding: 24px 20px;
-  }
+  return (
+    <div className="app">
+      <header className="header">
+        <div>
+          <p className="eyebrow">OPERATIVA</p>
+          <h1>Equipo Cocina</h1>
+        </div>
 
-  .page-navigation {
-    margin-top: 16px;
-  }
+        <p className="subtitle">
+          Control diario de cocina y restaurante
+        </p>
+      </header>
+
+      <main className="dashboard">
+        <section
+          className="card"
+          onClick={() => setPantalla("compras")}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              setPantalla("compras");
+            }
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          <ShoppingCart size={24} />
+          <h2>Compras</h2>
+          <p>Pedidos, proveedores y productos pendientes.</p>
+        </section>
+
+        <section className="card">
+          <ClipboardList size={24} />
+          <h2>Tareas</h2>
+          <p>Organiza y controla las tareas del equipo.</p>
+        </section>
+
+        <section className="card">
+          <Users size={24} />
+          <h2>Equipo</h2>
+          <p>Personal, responsables y turnos.</p>
+        </section>
+
+        <section className="card">
+          <AlertCircle size={24} />
+          <h2>Pendientes</h2>
+          <p>Prioridades e incidencias que requieren atención.</p>
+        </section>
+      </main>
+    </div>
+  );
 }
+
+export default App;
