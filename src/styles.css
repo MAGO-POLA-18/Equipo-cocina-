@@ -62,7 +62,7 @@ body {
   line-height: 1.5;
 }
 
-/* Tarjetas que se pueden pulsar */
+/* Tarjetas interactivas */
 
 .card[role="button"] {
   cursor: pointer;
@@ -78,7 +78,7 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* Navegación dentro de las páginas */
+/* Navegación interior */
 
 .page-navigation {
   width: min(100% - 32px, 900px);
@@ -112,12 +112,6 @@ body {
 
   .header {
     padding: 24px 20px;
-  }
-
-  .page-navigation {
-    margin-top: 16px;
-  }
-}
   }
 
   .page-navigation {
