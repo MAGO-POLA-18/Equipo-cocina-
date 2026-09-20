@@ -28,37 +28,41 @@ const productosFrioIniciales = [
 function App() {
   const [pantalla, setPantalla] = useState("home");
   const [productosFrio, setProductosFrio] = useState(productosFrioIniciales);
- const [seleccionados, setSeleccionados] = useState([]);
-const [detallesCompra, setDetallesCompra] = useState({});
+  const [seleccionados, setSeleccionados] = useState([]);
+  const [detallesCompra, setDetallesCompra] = useState({});
   const [comprados, setComprados] = useState([]);
   const [nuevoProducto, setNuevoProducto] = useState("");
 
-const cambiarSeleccion = (producto) => {
-  const estaSeleccionado = seleccionados.includes(producto);
+  const cambiarSeleccion = (producto) => {
+    const estaSeleccionado = seleccionados.includes(producto);
 
-  if (estaSeleccionado) {
-    setSeleccionados((actuales) =>
-      actuales.filter((item) => item !== producto)
-    );
+    if (estaSeleccionado) {
+      setSeleccionados((actuales) =>
+        actuales.filter((item) => item !== producto)
+      );
 
-    setDetallesCompra((actuales) => {
-      const copia = { ...actuales };
-      delete copia[producto];
-      return copia;
-    });
-  } else {
-    setSeleccionados((actuales) => [...actuales, producto]);
+      setDetallesCompra((actuales) => {
+        const copia = { ...actuales };
+        delete copia[producto];
+        return copia;
+      });
 
-    setDetallesCompra((actuales) => ({
-      ...actuales,
-      [producto]: {
-        cantidad: "",
-        unidad: "unidades",
-        nota: "",
-      },
-    }));
-  }
-};
+      setComprados((actuales) =>
+        actuales.filter((item) => item !== producto)
+      );
+    } else {
+      setSeleccionados((actuales) => [...actuales, producto]);
+
+      setDetallesCompra((actuales) => ({
+        ...actuales,
+        [producto]: {
+          cantidad: "",
+          unidad: "unidades",
+          nota: "",
+        },
+      }));
+    }
+  };
 
   const agregarProducto = (event) => {
     event.preventDefault();
@@ -79,90 +83,100 @@ const cambiarSeleccion = (producto) => {
     setProductosFrio((actuales) => [...actuales, nombre]);
     setNuevoProducto("");
   };
-if (pantalla === "pedido") {
-  return (
-    <div className="app">
-      <header className="header">
-        <div>
-          <p className="eyebrow">COMPRAS</p>
-          <h1>Pedido actual</h1>
-        </div>
 
-        <p className="subtitle">
-          Marca los productos a medida que los vayas comprando.
-        </p>
-      </header>
+  const cambiarComprado = (producto) => {
+    const estaComprado = comprados.includes(producto);
 
-      <div className="page-navigation">
-        <button
-          className="back-button"
-          onClick={() => setPantalla("frio")}
-        >
-          <ArrowLeft size={18} />
-          Volver
-        </button>
-      </div>
+    if (estaComprado) {
+      setComprados((actuales) =>
+        actuales.filter((item) => item !== producto)
+      );
+    } else {
+      setComprados((actuales) => [...actuales, producto]);
+    }
+  };
 
-      <main className="shopping-page">
-        <section className="order-section">
-          <div className="order-section-title">
-            <Snowflake size={18} />
-            <h2>Frío</h2>
+  if (pantalla === "pedido") {
+    return (
+      <div className="app">
+        <header className="header">
+          <div>
+            <p className="eyebrow">COMPRAS</p>
+            <h1>Pedido actual</h1>
           </div>
 
-          {seleccionados.length === 0 ? (
-            <p className="empty-order">
-              Todavía no hay productos en el pedido.
-            </p>
-          ) : (
-            <div className="order-list">
-              {seleccionados.map((producto) => {
-                const comprado = comprados.includes(producto);
-                const detalle = detallesCompra[producto] || {};
+          <p className="subtitle">
+            Marca los productos a medida que los vayas comprando.
+          </p>
+        </header>
 
-                return (
-                  <button
-                    key={producto}
-                    className={`order-item ${comprado ? "purchased" : ""}`}
-                    onClick={() =>
-                      setComprados((actuales) =>
-                        comprado
-                          ? actuales.filter((item) => item !== producto)
-                          : [...actuales, producto]
-                      )
-                    }
-                  >
-                    <span className="purchase-check">
-                      {comprado && <Check size={18} />}
-                    </span>
+        <div className="page-navigation">
+          <button
+            className="back-button"
+            onClick={() => setPantalla("frio")}
+          >
+            <ArrowLeft size={18} />
+            Volver
+          </button>
+        </div>
 
-                    <span className="order-product-info">
-                      <span className="order-product-main">
-                        <strong>{producto}</strong>
+        <main className="shopping-page">
+          <section className="order-section">
+            <div className="order-section-title">
+              <Snowflake size={18} />
+              <h2>Frío</h2>
+            </div>
 
-                        {(detalle.cantidad || detalle.unidad) && (
+            {seleccionados.length === 0 ? (
+              <p className="empty-order">
+                Todavía no hay productos en el pedido.
+              </p>
+            ) : (
+              <div className="order-list">
+                {seleccionados.map((producto) => {
+                  const comprado = comprados.includes(producto);
+                  const detalle = detallesCompra[producto] || {};
+
+                  return (
+                    <button
+                      key={producto}
+                      className={`order-item ${
+                        comprado ? "purchased" : ""
+                      }`}
+                      onClick={() => cambiarComprado(producto)}
+                    >
+                      <span className="purchase-check">
+                        {comprado && <Check size={18} />}
+                      </span>
+
+                      <span className="order-product-info">
+                        <span className="order-product-main">
+                          <strong>{producto}</strong>
+
                           <span className="order-quantity">
-                            {detalle.cantidad || "—"} {detalle.unidad}
+                            {detalle.cantidad
+                              ? `${detalle.cantidad} ${detalle.unidad}`
+                              : detalle.unidad}
+                          </span>
+                        </span>
+
+                        {detalle.nota && (
+                          <span className="order-note">
+                            {detalle.nota}
                           </span>
                         )}
                       </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        </main>
+      </div>
+    );
+  }
 
-                      {detalle.nota && (
-                        <span className="order-note">
-                          {detalle.nota}
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </section>
-      </main>
-    </div>
-  );
-}
   if (pantalla === "frio") {
     return (
       <div className="app">
@@ -188,11 +202,12 @@ if (pantalla === "pedido") {
         </div>
 
         <main className="shopping-page">
-        <button
-  className="shopping-summary"
-  onClick={() => setPantalla("pedido")}
->
-         </button>
+          <button
+            type="button"
+            className="shopping-summary"
+            onClick={() => setPantalla("pedido")}
+          >
+            <div>
               <span className="summary-label">PEDIDO ACTUAL</span>
               <strong>
                 {seleccionados.length}{" "}
@@ -201,99 +216,109 @@ if (pantalla === "pedido") {
             </div>
 
             <ShoppingCart size={24} />
-          </div>
+          </button>
 
           <section className="product-list">
             {productosFrio.map((producto) => {
               const activo = seleccionados.includes(producto);
 
               return (
-               <div key={producto} className={`product-row ${activo ? "selected" : ""}`}>
-  <button
-    className={`product-item ${activo ? "selected" : ""}`}
-    onClick={() => cambiarSeleccion(producto)}
-  >
-    <span className="product-check">
-      {activo && <Check size={18} />}
-    </span>
+                <div
+                  key={producto}
+                  className={`product-row ${activo ? "selected" : ""}`}
+                >
+                  <button
+                    type="button"
+                    className={`product-item ${activo ? "selected" : ""}`}
+                    onClick={() => cambiarSeleccion(producto)}
+                  >
+                    <span className="product-check">
+                      {activo && <Check size={18} />}
+                    </span>
 
-    <span>{producto}</span>
-  </button>
+                    <span>{producto}</span>
+                  </button>
 
-  {activo && (
-    <div className="product-details">
-      <div className="quantity-field">
-        <label>Cantidad</label>
+                  {activo && (
+                    <div className="product-details">
+                      <div className="quantity-field">
+                        <label>Cantidad</label>
 
-        <input
-          type="number"
-          min="0"
-          step="0.1"
-          placeholder="0"
-          value={detallesCompra[producto]?.cantidad || ""}
-          onChange={(event) =>
-            setDetallesCompra((actuales) => ({
-              ...actuales,
-              [producto]: {
-                ...actuales[producto],
-                cantidad: event.target.value,
-              },
-            }))
-          }
-        />
-      </div>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          placeholder="0"
+                          value={detallesCompra[producto]?.cantidad || ""}
+                          onChange={(event) =>
+                            setDetallesCompra((actuales) => ({
+                              ...actuales,
+                              [producto]: {
+                                ...actuales[producto],
+                                cantidad: event.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </div>
 
-      <div className="unit-field">
-        <label>Unidad</label>
+                      <div className="unit-field">
+                        <label>Unidad</label>
 
-        <select
-          value={detallesCompra[producto]?.unidad || "unidades"}
-          onChange={(event) =>
-            setDetallesCompra((actuales) => ({
-              ...actuales,
-              [producto]: {
-                ...actuales[producto],
-                unidad: event.target.value,
-              },
-            }))
-          }
-        >
-          <option value="unidades">Unidades</option>
-          <option value="kg">Kg</option>
-          <option value="g">Gramos</option>
-          <option value="docenas">Docenas</option>
-          <option value="litros">Litros</option>
-          <option value="botellas">Botellas</option>
-          <option value="cajas">Cajas</option>
-          <option value="paquetes">Paquetes</option>
-        </select>
-      </div>
-      <div className="note-field">
-  <label>Nota opcional</label>
+                        <select
+                          value={
+                            detallesCompra[producto]?.unidad || "unidades"
+                          }
+                          onChange={(event) =>
+                            setDetallesCompra((actuales) => ({
+                              ...actuales,
+                              [producto]: {
+                                ...actuales[producto],
+                                unidad: event.target.value,
+                              },
+                            }))
+                          }
+                        >
+                          <option value="unidades">Unidades</option>
+                          <option value="kg">Kg</option>
+                          <option value="g">Gramos</option>
+                          <option value="docenas">Docenas</option>
+                          <option value="litros">Litros</option>
+                          <option value="botellas">Botellas</option>
+                          <option value="cajas">Cajas</option>
+                          <option value="paquetes">Paquetes</option>
+                        </select>
+                      </div>
 
-<textarea
-  rows="3"
-  placeholder="Ej. grandes, maduros, marca concreta..."
-  value={detallesCompra[producto]?.nota || ""}
-  onChange={(event) =>
-    setDetallesCompra((actuales) => ({
-      ...actuales,
-      [producto]: {
-        ...actuales[producto],
-        nota: event.target.value,
-      },
-    }))
-  }
-/>
-</div>
-    </div>
-  )}
-</div>
+                      <div className="note-field">
+                        <label>Nota opcional</label>
+
+                        <textarea
+                          rows="3"
+                          placeholder="Ej. grandes, maduros, marca concreta..."
+                          value={detallesCompra[producto]?.nota || ""}
+                          onChange={(event) =>
+                            setDetallesCompra((actuales) => ({
+                              ...actuales,
+                              [producto]: {
+                                ...actuales[producto],
+                                nota: event.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </section>
 
-          <form className="add-product-form" onSubmit={agregarProducto}>
+          <form
+            className="add-product-form"
+            onSubmit={agregarProducto}
+          >
             <input
               type="text"
               value={nuevoProducto}
