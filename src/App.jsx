@@ -121,17 +121,69 @@ const cambiarSeleccion = (producto) => {
               const activo = seleccionados.includes(producto);
 
               return (
-                <button
-                  key={producto}
-                  className={`product-item ${activo ? "selected" : ""}`}
-                  onClick={() => cambiarSeleccion(producto)}
-                >
-                  <span className="product-check">
-                    {activo && <Check size={18} />}
-                  </span>
+               <div key={producto} className={`product-row ${activo ? "selected" : ""}`}>
+  <button
+    className={`product-item ${activo ? "selected" : ""}`}
+    onClick={() => cambiarSeleccion(producto)}
+  >
+    <span className="product-check">
+      {activo && <Check size={18} />}
+    </span>
 
-                  <span>{producto}</span>
-                </button>
+    <span>{producto}</span>
+  </button>
+
+  {activo && (
+    <div className="product-details">
+      <div className="quantity-field">
+        <label>Cantidad</label>
+
+        <input
+          type="number"
+          min="0"
+          step="0.1"
+          placeholder="0"
+          value={detallesCompra[producto]?.cantidad || ""}
+          onChange={(event) =>
+            setDetallesCompra((actuales) => ({
+              ...actuales,
+              [producto]: {
+                ...actuales[producto],
+                cantidad: event.target.value,
+              },
+            }))
+          }
+        />
+      </div>
+
+      <div className="unit-field">
+        <label>Unidad</label>
+
+        <select
+          value={detallesCompra[producto]?.unidad || "unidades"}
+          onChange={(event) =>
+            setDetallesCompra((actuales) => ({
+              ...actuales,
+              [producto]: {
+                ...actuales[producto],
+                unidad: event.target.value,
+              },
+            }))
+          }
+        >
+          <option value="unidades">Unidades</option>
+          <option value="kg">Kg</option>
+          <option value="g">Gramos</option>
+          <option value="docenas">Docenas</option>
+          <option value="litros">Litros</option>
+          <option value="botellas">Botellas</option>
+          <option value="cajas">Cajas</option>
+          <option value="paquetes">Paquetes</option>
+        </select>
+      </div>
+    </div>
+  )}
+</div>
               );
             })}
           </section>
